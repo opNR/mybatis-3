@@ -34,6 +34,7 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
 
   protected DataSource dataSource;
 
+  // 直接创建 UnpooledDataSource 对象
   public UnpooledDataSourceFactory() {
     this.dataSource = new UnpooledDataSource();
   }
@@ -60,6 +61,7 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
     }
   }
 
+  // 直接返回 UnpooledDataSource 或 PooledDataSource 对象
   @Override
   public DataSource getDataSource() {
     return dataSource;

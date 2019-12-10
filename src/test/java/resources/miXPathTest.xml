@@ -1,0 +1,26 @@
+<inventory>
+  <book year="2000">
+    <title>深入理解Java虚拟机</title>
+    <author>周志明</author>
+    <publisher>机械工业出版时</publisher>
+    <isbn>isbn11111</isbn>
+    <price>11</price>
+  </book>
+
+  <book year="2005">
+    <title>Java并发编程实战</title>
+    <author>Tim Peierls</author>
+    <publisher>机械工业出版社</publisher>
+    <isbn>isbn22222</isbn>
+    <price>22</price>
+  </book>
+
+  <book year="1995">
+    <title>领域驱动设计精粹</title>
+    <author>Vaughn Vernon</author>
+    <publisher>电子工业出版社</publisher>
+    <isbn>isbn33333</isbn>
+    <price>33</price>
+  </book>
+  <!-- more books ... -->
+</inventory>

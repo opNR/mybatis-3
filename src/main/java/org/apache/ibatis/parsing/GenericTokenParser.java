@@ -20,8 +20,11 @@ package org.apache.ibatis.parsing;
  */
 public class GenericTokenParser {
 
+  //占位符的开始标记
   private final String openToken;
+  //占位符的结束标记
   private final String closeToken;
+  // TokenHandler 的接口实现会按照一定的逻辑解析占位符
   private final TokenHandler handler;
 
   public GenericTokenParser(String openToken, String closeToken, TokenHandler handler) {
@@ -30,6 +33,7 @@ public class GenericTokenParser {
     this.handler = handler;
   }
 
+  //顺序查找openToken 和 closeToken, 解析得到占位符的字面值，并将其交给TokenHandler处理,然后将解析结果重新拼装成字符串并返回
   public String parse(String text) {
     if (text == null || text.isEmpty()) {
       return "";
