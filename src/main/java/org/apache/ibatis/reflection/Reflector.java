@@ -49,15 +49,28 @@ import org.apache.ibatis.reflection.property.PropertyNamer;
  */
 public class Reflector {
 
+  //对应的Class类型
   private final Class<?> type;
+
+  //可读属性的名称集合, 即使存在相应getter方法的属性, 初始值为空数组
   private final String[] readablePropertyNames;
+  //可写属性的名称集合, 即使存在相应setter方法的属性, 初始值为空数组
   private final String[] writablePropertyNames;
+
+  //记录属性的setter方法, key:属性名称；value:Invoker对象(是对setter方法对应Method对象的封装)
   private final Map<String, Invoker> setMethods = new HashMap<>();
+  //记录属性的getter方法, key:属性名称；value:Invoker对象
   private final Map<String, Invoker> getMethods = new HashMap<>();
+
+  //setter方法的参数值类型, key:属性名称；value:setter方法的参数类型
   private final Map<String, Class<?>> setTypes = new HashMap<>();
+  //getter方法的返回值类型, key:属性名称；value:getter方法的返回值类型
   private final Map<String, Class<?>> getTypes = new HashMap<>();
+
+  //默认构造方法
   private Constructor<?> defaultConstructor;
 
+  //所有属性的名称集合（Key:大写格式）：readablePropertyNames + writablePropertyNames
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
 
   public Reflector(Class<?> clazz) {
@@ -76,17 +89,21 @@ public class Reflector {
     }
   }
 
+  //增加默认构造方法: 通过反射遍历所有构造方法,找到无参的
   private void addDefaultConstructor(Class<?> clazz) {
     Constructor<?>[] constructors = clazz.getDeclaredConstructors();
     Arrays.stream(constructors).filter(constructor -> constructor.getParameterTypes().length == 0)
       .findAny().ifPresent(constructor -> this.defaultConstructor = constructor);
   }
-
+  //主要负责解析类中的getter方法,有三个核心步骤：
   private void addGetMethods(Class<?> clazz) {
     Map<String, List<Method>> conflictingGetters = new HashMap<>();
+    //1.获取所有方法
     Method[] methods = getClassMethods(clazz);
+    //2.
     Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 0 && PropertyNamer.isGetter(m.getName()))
       .forEach(m -> addMethodConflict(conflictingGetters, PropertyNamer.methodToProperty(m.getName()), m));
+    //3.
     resolveGetterConflicts(conflictingGetters);
   }
 
@@ -271,19 +288,23 @@ public class Reflector {
    * @param clazz The class
    * @return An array containing all methods in this class
    */
+  //获取当前类以及父类中的所有方法(公共+私有)
   private Method[] getClassMethods(Class<?> clazz) {
     Map<String, Method> uniqueMethods = new HashMap<>();
+    //? 为什么赋值给currentClass做后续操作,而不用原clazz  -- 因为要遍历获取父类、接口、及其自身的所有方法
     Class<?> currentClass = clazz;
     while (currentClass != null && currentClass != Object.class) {
+      //获取本类声明的所有方法,放进uniqueMethods
       addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
 
       // we also need to look for interface methods -
       // because the class may be abstract
+      //获取所有接口中定义的方法,放进uniqueMethods
       Class<?>[] interfaces = currentClass.getInterfaces();
       for (Class<?> anInterface : interfaces) {
         addUniqueMethods(uniqueMethods, anInterface.getMethods());
       }
-
+      //获取父类,继续while循环
       currentClass = currentClass.getSuperclass();
     }
 
@@ -306,6 +327,7 @@ public class Reflector {
     }
   }
 
+  //获取接口签名,签名格式为: 返回值类型#方法名:参数1,参数2  例如：
   private String getSignature(Method method) {
     StringBuilder sb = new StringBuilder();
     Class<?> returnType = method.getReturnType();

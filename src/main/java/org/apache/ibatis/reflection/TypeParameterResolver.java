@@ -65,6 +65,7 @@ public class TypeParameterResolver {
   }
 
   private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
+    //? 区别：TypeVariable VS ParameterizedType VS GenericArrayType
     if (type instanceof TypeVariable) {
       return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass);
     } else if (type instanceof ParameterizedType) {

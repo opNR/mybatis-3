@@ -27,7 +27,7 @@ public final class PropertyNamer {
   private PropertyNamer() {
     // Prevent Instantiation of Static Class
   }
-
+  //根据方法名获取属性名; 注意：方法名的命名格式一定要按照JavaBean的格式,不然转换会有问题
   public static String methodToProperty(String name) {
     if (name.startsWith("is")) {
       name = name.substring(2);
@@ -36,7 +36,7 @@ public final class PropertyNamer {
     } else {
       throw new ReflectionException("Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
     }
-
+    //截取掉get/set/is后,第二个字符必须为小写
     if (name.length() == 1 || (name.length() > 1 && !Character.isUpperCase(name.charAt(1)))) {
       name = name.substring(0, 1).toLowerCase(Locale.ENGLISH) + name.substring(1);
     }

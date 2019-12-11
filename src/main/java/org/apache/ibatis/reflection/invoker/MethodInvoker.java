@@ -30,7 +30,8 @@ public class MethodInvoker implements Invoker {
 
   public MethodInvoker(Method method) {
     this.method = method;
-
+    //? 为什么做这个判断：method.getParameterTypes()==1 , type = getParameterTypes()[0] ? getReturnType()
+    //因为：还是JavaBean规范的原因, 如果getParameterTypes()==1 说明是 setter方法（去参数） ，否则是getter方法（取返回值）
     if (method.getParameterTypes().length == 1) {
       type = method.getParameterTypes()[0];
     } else {

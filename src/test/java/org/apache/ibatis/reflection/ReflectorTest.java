@@ -19,7 +19,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.ibatis.reflection.invoker.Invoker;
 import org.junit.jupiter.api.Assertions;
@@ -29,7 +32,6 @@ import static com.googlecode.catchexception.apis.BDDCatchException.*;
 import static org.assertj.core.api.BDDAssertions.then;
 
 class ReflectorTest {
-
   @Test
   void testGetSetterType() {
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
@@ -75,6 +77,8 @@ class ReflectorTest {
   static class Section extends AbstractEntity implements Entity<Long> {
   }
 
+
+  //TODO
   @Test
   void shouldResolveSetterParam() {
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
@@ -321,5 +325,17 @@ class ReflectorTest {
         .hasMessageMatching(
             "Ambiguous setters defined for property 'bool' in class '" + Bean.class.getName().replace("$", "\\$")
                 + "' with types '(java.lang.Integer|boolean)' and '(java.lang.Integer|boolean)'\\.");
+  }
+
+
+  public static void main(String[] args) {
+    //1. 测试 computeIfAbsent
+    ConcurrentMap<String, String> map = new ConcurrentHashMap<>();
+    map.computeIfAbsent("aa", String::new);
+    map.computeIfAbsent("bb", String::new);
+    map.computeIfAbsent("aa", String::new);
+    Collection<String> strings = map.values();
+    String[] arr = strings.toArray(new String[0]);
+    System.out.println(arr);
   }
 }
