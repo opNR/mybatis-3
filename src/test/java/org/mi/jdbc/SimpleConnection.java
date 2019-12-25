@@ -10,21 +10,21 @@ import java.sql.*;
 public class SimpleConnection {
 
   public static void main(String[] args) throws SQLException {
-    Connection collection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mybatis_test?user=root&password=root&serverTimezone=UTC");
+    Connection collection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mysql?user=root&password=root_2020&serverTimezone=UTC");
     viewTable(collection);
     System.out.println(collection);
   }
 
   private static void viewTable(Connection connection) throws SQLException {
     Statement statement = null;
-    String sql = "SELECT id, name FROM class";
+    String sql = "SELECT host, user FROM user";
     try {
       statement = connection.createStatement();
       ResultSet resultSet = statement.executeQuery(sql);
       while (resultSet.next()){
-        int id = resultSet.getInt("id");
-        String name = resultSet.getString("name");
-        System.out.println("row:id="+id+",name="+name);
+        String id = resultSet.getString("host");
+        String name = resultSet.getString("user");
+        System.out.println("row:host="+id+",user="+name);
       }
     } catch (SQLException e) {
       e.printStackTrace();
